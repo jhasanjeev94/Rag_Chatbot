@@ -64,6 +64,17 @@ class GroqLLMClient:
                 retry_delay *= 2
                 
             except APIError as e:
+                if 'model_not_found' in str(e) or 'model_decommissioned' in str(e):
+                    try:
+                        available_models = [m.id for m in self.client.models.list().data]
+                        if available_models:
+                            new_model = available_models[-1] # Pick the last one or any valid one
+                            logger.warning(f"Model {self.model} not found, falling back to {new_model}")
+                            self.model = new_model
+                            continue
+                    except Exception as fallback_e:
+                        logger.error(f"Fallback failed: {fallback_e}")
+                
                 logger.error(f"Groq APIError: {e}")
                 return "I encountered an error communicating with my language model. Please try again."
             except Exception as e:
