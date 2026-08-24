@@ -38,7 +38,7 @@ def generate_answer(query: str, context_chunks: List[Dict[str, Any]]) -> Dict[st
     raw_response = client.generate(SYSTEM_PROMPT, user_prompt)
     
     # Parse output
-    url_match = re.search(r'(https?://[^\s).]+)', raw_response)
+    url_match = re.search(r'(https?://[^\s\]\)]+)', raw_response)
     citation_url = url_match.group(1) if url_match else ""
     
     date_match = re.search(r'Last updated from sources:\s*(.*)', raw_response, flags=re.IGNORECASE)

@@ -20,6 +20,14 @@ def validate_response(response: Dict[str, str]) -> Dict[str, Any]:
     is_valid = True
     answer_text = response.get('answer', '')
     
+    # Pass through API errors
+    if "error communicating" in answer_text or "unable to answer" in answer_text:
+        return {
+            'valid': False,
+            'corrected_response': {'answer': answer_text, 'citation_url': '', 'last_updated': ''},
+            'issues': ['API Error']
+        }
+    
     # Check 1: Sentence count (rough approximation using delimiters)
     sentences = re.split(r'[.!?]+', answer_text)
     sentences = [s.strip() for s in sentences if s.strip()]

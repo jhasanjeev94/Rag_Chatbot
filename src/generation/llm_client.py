@@ -67,8 +67,10 @@ class GroqLLMClient:
                 if 'model_not_found' in str(e) or 'model_decommissioned' in str(e):
                     try:
                         available_models = [m.id for m in self.client.models.list().data]
-                        if available_models:
-                            new_model = available_models[-1] # Pick the last one or any valid one
+                        # Filter out non-chat models
+                        chat_models = [m for m in available_models if 'whisper' not in m and 'guard' not in m and 'safeguard' not in m]
+                        if chat_models:
+                            new_model = chat_models[0]
                             logger.warning(f"Model {self.model} not found, falling back to {new_model}")
                             self.model = new_model
                             continue
