@@ -89,8 +89,9 @@ def assemble_context(chunks: List[Dict[str, Any]]) -> str:
         meta = chunk['metadata']
         scheme_name = meta.get('scheme_name', 'Unknown Source')
         source_url = meta.get('source_url', 'Unknown URL')
+        scrape_date = meta.get('scrape_date', 'Unknown Date')
         
-        header = f"--- Context Chunk {i} (Source: {scheme_name} | URL: {source_url}) ---"
+        header = f"--- Context Chunk {i} (Source: {scheme_name} | URL: {source_url} | Date: {scrape_date}) ---"
         content = chunk['content']
         
         context_parts.append(f"{header}\n{content}")
